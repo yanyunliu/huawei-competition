@@ -16,6 +16,8 @@ public class CrossDomain {
 		
 //	起始点到该路口最短距离
 	private int shortStartToHere;
+	
+	private int obstacle;
 	 
 	
 	 
@@ -50,6 +52,18 @@ public class CrossDomain {
 		TP_Flag = tP_Flag;
 		this.prefixCrossId = prefixCrossId;
 		this.shortStartToHere = shortStartToHere;
+	}
+
+
+
+	public int getObstacle() {
+		return obstacle;
+	}
+
+
+
+	public void setObstacle(int obstacle) {
+		this.obstacle = obstacle;
 	}
 
 

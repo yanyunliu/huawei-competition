@@ -7,7 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 public class Cacul {
-	 
+	 public static void main(String[] args) {
+		 String carPath = "E:\\文档\\赛事\\华为软件精英挑战赛\\2019软挑-初赛-SDK1\\SDK\\SDK_java1\\bin\\config\\car.txt";
+	        String roadPath = "E:\\文档\\赛事\\华为软件精英挑战赛\\2019软挑-初赛-SDK1\\SDK\\SDK_java1\\bin\\config\\road.txt";
+	        String crossPath = "E:\\文档\\赛事\\华为软件精英挑战赛\\2019软挑-初赛-SDK1\\SDK\\SDK_java1\\bin\\config\\cross.txt";
+	        String answerPath = "E:\\文档\\赛事\\华为软件精英挑战赛\\2019软挑-初赛-SDK1\\SDK\\SDK_java1\\bin\\config\\answer.txt";
+	        cacul(carPath, roadPath, crossPath, answerPath);
+	        
+	}
 
 	public static void cacul(String carPath, String roadPath, String crossPath, String answerPath) {
 //		读取文件初始化数据
@@ -15,6 +22,8 @@ public class Cacul {
 		Map<Integer,CarDomain> carMap=catalog.get("car");
 		Map<Integer,RoadDomain> roadMap=catalog.get("road");
 		Map<Integer,CrossDomain> crossMap=catalog.get("cross");
+		
+		crossMap.get(10).setObstacle(carMap.size()/2);
 		
         String[] anwser=new String [carMap.size()];
 		int k=0;
@@ -90,7 +99,7 @@ public class Cacul {
 		
 		CrossDomain endCrossDomain=crossMap.get(carDomain.getCrossEndId());
 		CrossDomain minTCross=getMinTCross(tCrossDomainMap);
-		if(endCrossDomain.getCrossId()==(minTCross.getCrossId())||"P".equals(endCrossDomain.getTP_Flag())){
+		if("P".equals(endCrossDomain.getTP_Flag())||endCrossDomain.getCrossId()==(minTCross.getCrossId())){
 			System.out.println("结束了");
 			List<Integer> roadArray=new ArrayList<>(); 
 			CrossDomain next=endCrossDomain;
@@ -114,12 +123,18 @@ public class Cacul {
 //			处理四条相邻道路对应的路口  
 			for(int i=0;i<roadArray.length;i++){
 				if(roadArray[i]!=-1){
-					
-					if(roadMap.get(roadArray[i]).getRoadStartCrossId()==minTCross.getCrossId()){
+					int obstacle =crossMap.get(roadMap.get(roadArray[i]).getRoadStartCrossId()).getObstacle();
+					if( roadMap.get(roadArray[i]).getRoadStartCrossId()!=endCrossDomain.getCrossId()&&obstacle!=0){
+						crossMap.get(roadMap.get(roadArray[i]).getRoadStartCrossId()).setObstacle(--obstacle);
+						continue;
+					}
+					if(roadMap.get(roadArray[i]).getRoadStartCrossId()==minTCross.getCrossId()  ){
+						
 						 adjacentCrossDomain=crossMap.get(roadMap.get(roadArray[i]).getRoadEndCrossId());
 						 
 					}else if(roadMap.get(roadArray[i]).getRoadFlag()==1){
-						 adjacentCrossDomain=crossMap.get(roadMap.get(roadArray[i]).getRoadStartCrossId());
+						 
+						adjacentCrossDomain=crossMap.get(roadMap.get(roadArray[i]).getRoadStartCrossId());
 					}else{
 						continue;
 					};
